@@ -7,7 +7,8 @@ module.exports = {
   'extends': ['standard','plugin:react-native/all'],
   'globals': {
     'Atomics': 'readonly',
-    'SharedArrayBuffer': 'readonly'
+    'SharedArrayBuffer': 'readonly',
+    'adjust':'readonly'
   },
   "parser": "babel-eslint",
   'parserOptions': {
