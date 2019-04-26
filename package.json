@@ -1,0 +1,49 @@
+{
+  "name": "RNTemplate",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "apk": "cd android && ./gradlew assembleRelease && cp ./app/build/outputs/apk/app-release.apk ../release.apk",
+    "apk-w": "cd android && gradlew assembleRelease && copy app\\build\\outputs\\apk\\app-release.apk ..\\release.apk /y",
+    "test": "jest",
+    "build": "roadhog build",
+    "lint": " eslint --ext .js index.js src",
+    "fixed": " eslint --fix index.js src",
+    "precommit": "npm run lint"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "dependencies": {
+    "antd-mobile-rn": "^2.3.3",
+    "babel-eslint": "^10.0.1",
+    "react": "16.8.3",
+    "react-native": "0.59.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/runtime": "^7.4.3",
+    "babel-jest": "^24.7.1",
+    "babel-plugin-import": "^1.11.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-native": "^3.7.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.7.1",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "mobx-react-devtools": "^6.1.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
