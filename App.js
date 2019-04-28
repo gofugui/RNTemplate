@@ -11,7 +11,7 @@ import React, { Component } from 'react'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 // eslint-disable-next-line no-unused-vars
 import { Button, Toast } from 'antd-mobile-rn'
-import { observable, computed } from 'mobx'
+import { observable, computed, configure, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
 import request from './src/utils/request'
 const instructions = Platform.select({
@@ -22,7 +22,7 @@ const instructions = Platform.select({
 })
 
 type Props = {};
-
+configure({ enforceActions: 'always' })
 @observer
 class App extends Component<Props> {
    @observable price = 0
@@ -30,6 +30,11 @@ class App extends Component<Props> {
 
    @computed get total () {
      return this.price * this.amount
+   }
+
+   @action addAmount () {
+     // alert(this.amount)
+     this.amount++
    }
 
   loadingToast = () => {
@@ -48,6 +53,7 @@ class App extends Component<Props> {
   render () {
     return (
       <View style={styles.container}>
+        <Button onClick={() => this.addAmount()}>{this.amount}</Button>
         <Button onClick={() => this.loadingToast()}>Loading toast</Button>
         <Text style={styles.welcome}>Welcome to React Native!</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
