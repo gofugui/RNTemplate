@@ -8,7 +8,11 @@ module.exports = {
   'globals': {
     'Atomics': 'readonly',
     'SharedArrayBuffer': 'readonly',
-    'adjust':'readonly'
+    'adjust':'readonly',
+    'DeviceInfo':'readonly',
+    'Images':'readonly',
+    'Colors':'readonly',
+    'Contants':'readonly'
   },
   "parser": "babel-eslint",
   'parserOptions': {

@@ -8,56 +8,60 @@
 
 // eslint-disable-next-line no-unused-vars
 import React, { Component } from 'react'
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View, Animated } from 'react-native'
 // eslint-disable-next-line no-unused-vars
 import { Button, Toast } from 'antd-mobile-rn'
 import { observable, computed, configure, action } from 'mobx'
 import { observer, inject } from 'mobx-react/native'
-import request from './src/utils/request'
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu'
-})
+import NetInfoDecorator from './src/common/NetInfoDecorator'
+
+import AppNavigator from './src/navigation/AppNavigator'
 
 type Props = {};
 configure({ enforceActions: 'always' })
+
+@NetInfoDecorator
 @observer
 class App extends Component<Props> {
-   @observable price = 0
-   @observable amount = 1;
+   state = { loading: true, promptPosition: new Animated.Value(0) }
 
-   @computed get total () {
-     return this.price * this.amount
-   }
-
-   @action addAmount () {
-     // alert(this.amount)
-     this.amount++
-   }
-
+  // 显示
   loadingToast = () => {
     Toast.loading('Loading...', 1, () => {
       // console.log('Load complete !!!')
+      this.setState({
+        loading: false
+      })
     })
   }
 
-  async componentDidMount () {
-    const res = await request.get('https://api.ttt.sh/ip/qqwry/')// .then(data => console.log(JSON.parse(data)))
-
-    console.log(res)
-    // console.log(error, data)
+  componentWillReceiveProps (nextProps) {
+    const { isConnected } = nextProps
+    // 无网络
+    if (!isConnected) {
+      Animated.timing(this.state.promptPosition, {
+        toValue: 1,
+        duration: 200
+      }).start()
+    } else {
+      Animated.timing(this.state.promptPosition, {
+        toValue: 0,
+        duration: 200
+      }).start()
+    }
   }
 
   render () {
+    let positionY = this.state.promptPosition.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-30, DeviceInfo.__IOS__ ? 20 : 0]
+    })
     return (
       <View style={styles.container}>
-        <Button onClick={() => this.addAmount()}>{this.amount}</Button>
-        <Button onClick={() => this.loadingToast()}>Loading toast</Button>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <AppNavigator />
+        <Animated.View style={[styles.netInfoView, { top: positionY }]}>
+          <Text style={styles.netInfoPrompt}>网络异常，请检查网络稍后重试~</Text>
+        </Animated.View>
       </View>
     )
   }
@@ -66,20 +70,20 @@ export default App
 const styles = StyleSheet.create({
   // eslint-disable-next-line react-native/no-color-literals
   container: {
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
-  // eslint-disable-next-line react-native/no-color-literals
-  instructions: {
-    color: '#333333',
-    marginBottom: 5,
-    textAlign: 'center'
+  netInfoPrompt: {
+    color: Colors.white,
+    fontWeight: 'bold'
   },
-  welcome: {
-    fontSize: 20,
-    margin: 10,
-    textAlign: 'center'
+  netInfoView: {
+    alignItems: 'center',
+    backgroundColor: Colors.theme,
+    height: 30,
+    justifyContent: 'center',
+    left: 0,
+    position: 'absolute',
+    right: 0
   }
 })

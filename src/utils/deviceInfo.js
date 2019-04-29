@@ -16,25 +16,28 @@ const {
 const X_WIDTH = 375
 const X_HEIGHT = 812
 
-const OS = Platform.OS
+const __IOS__ = Platform.OS === 'ios'
 
-const isIphoneX = OS === 'ios' && ((height === X_HEIGHT && width === X_WIDTH) || (height === X_WIDTH && width === X_HEIGHT))
+const isIphoneX = __IOS__ && ((height === X_HEIGHT && width === X_WIDTH) || (height === X_WIDTH && width === X_HEIGHT))
 
 const minSize = 1 / PixelRatio.get()
 
-const barHeight = OS === 'ios' ? (isIphoneX ? 44 : 20) : StatusBar.currentHeight
+const barHeight = __IOS__ ? (isIphoneX ? 44 : 20) : StatusBar.currentHeight
 
-const headerBarHeight = OS === 'ios' ? 0 : StatusBar.currentHeight
+const headerBarHeight = __IOS__ ? 0 : StatusBar.currentHeight
 
 const viewHeight = height - adjust(88) - barHeight - (isIphoneX ? 34 : 0)
 
-export {
-  OS,
+const isSmallDevice = width < 375
+
+global.DeviceInfo = {
   width,
   height,
   minSize,
   barHeight,
   isIphoneX,
   headerBarHeight,
-  viewHeight
+  viewHeight,
+  __IOS__,
+  isSmallDevice
 }
